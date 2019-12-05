@@ -6,14 +6,14 @@ class ChessboardState:
         chessboard (list): 2D list of characters representing the chessboard.
                             Q denotes a queen and # denotes an empty cell
     Attributes:
-        queen_positions (list): list of tuples representing locations of queens in the chessboard
+        queen_positions (frozenset): set of tuples representing locations of queens in the chessboard
     """
-
+    queen_positions: frozenset
     n = 8
 
     def __init__(self, chessboard=None, queen_positions=None):
         if chessboard is not None:
-            self.queen_positions = []
+            self.queen_positions = frozenset()
             self.init_queen_positions(chessboard)
         elif queen_positions is not None:
             self.queen_positions = queen_positions
@@ -24,7 +24,7 @@ class ChessboardState:
             for j in range(ChessboardState.n):
                 if chessboard[i][j] == 'Q':
                     config.append((i, j))
-        self.queen_positions = config
+        self.queen_positions = frozenset(config)
 
     def get_attacking_count(self):
         collisions = 0
@@ -40,11 +40,11 @@ class ChessboardState:
         neighbors_queen_positions = []
         for pos in self.queen_positions:
             for new_pos in self.moves_from_position(*pos):
-                new_queen_positions = list(self.queen_positions)
+                new_queen_positions = set(self.queen_positions)
                 new_queen_positions.remove(pos)
-                new_queen_positions.append(new_pos)
+                new_queen_positions.add(new_pos)
                 neighbors_queen_positions.append(new_queen_positions)
-        return [ChessboardState(queen_positions=nqp) for nqp in neighbors_queen_positions]
+        return [ChessboardState(queen_positions=frozenset(nqp)) for nqp in neighbors_queen_positions]
 
     def moves_from_position(self, i_pos, j_pos):
         moves = []
@@ -75,3 +75,14 @@ class ChessboardState:
         for row in self.get_chessboard():
             print(row)
         print()
+
+    def __lt__(self, other):
+        assert isinstance(other, ChessboardState)
+        return self.get_attacking_count() < other.get_attacking_count()
+
+    def __hash__(self):
+        return self.queen_positions.__hash__()
+
+    def __eq__(self, other):
+        assert isinstance(other, ChessboardState)
+        return self.queen_positions == other.queen_positions
