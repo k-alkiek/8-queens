@@ -2,7 +2,7 @@ from algorithms.abstract_solver import AbstractSolver
 
 
 class GASolver(AbstractSolver):
-    def solve(self, initial_chessboard_state):
+    def solve(self):
         pass
 
     def get_running_time(self):
