@@ -3,7 +3,8 @@ from algorithms.abstract_solver import AbstractSolver
 
 class CSPSolver(AbstractSolver):
     def solve(self):
-        pass
+        visited = []
+
 
     def get_running_time(self):
         pass

@@ -4,6 +4,13 @@ import time
 from chessboard.chessboard_state import ChessboardState
 from chessboard.chessboard_state_node import ChessboardStateNode
 
+"""
+    Implementation of the Hill Climbing base algorithm with random restarting on local minimum.
+
+    Parameter:
+        initial_chessboard_state: a ChessboardStateNode instance encapsulating the current chessboard state.
+"""
+
 
 class HillClimbingSolver(AbstractSolver):
     conflictions_count = float('inf')
@@ -13,12 +20,6 @@ class HillClimbingSolver(AbstractSolver):
     optimal_sol = None
     RANDOM_RESTART_LIMIT = 10
     prev_expanded_states = []
-    """
-        Implementation of the Hill Climbing base algorithm with random restarting on local minimum.
-        
-        Parameter:
-            initial_chessboard_state: a ChessboardStateNode instance encapsulating the current chessboard state.
-    """
 
     def solve(self, initial_chessboard_state):
         min_cost = initial_chessboard_state.cost()
@@ -78,7 +79,13 @@ class HillClimbingSolver(AbstractSolver):
         board = ChessboardState(configuration)
         while any(board.__eq__(e) for e in self.prev_expanded_states):
             configuration = [['#' for _ in range(8)] for _ in range(8)]
-            positions = [(i, randint(0, 7)) for i in range(8)]
+            positions.clear()
+            for i in range(8):
+                x, y = randint(0, 7), randint(0, 7)
+                if positions.count([x, y]) != 0:
+                    i -= 1
+                else:
+                    positions.append([x, y])
             for i, j in positions:
                 configuration[i][j] = 'Q'
             board = ChessboardState(configuration)
