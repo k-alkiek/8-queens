@@ -93,3 +93,8 @@ modules.xml
 
 __pycache__/
 venv/
+
+
+# IO files
+input.txt
+output.txt

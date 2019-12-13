@@ -22,9 +22,11 @@ if __name__ == '__main__':
     print("Number of attacks in the final solution =", hill.conflictions_count)
     print("Expanded node count =", hill.get_expanded_count())
     print("Execution time in milliseconds =", hill.get_running_time())
+    
+    print(len(state.neighbors()));
 
-    # app = QtWidgets.QApplication(sys.argv)
-    # main = MainWindow()
-    # main.setWindowTitle("8 Queens")
-    # main.show()
-    # sys.exit(app.exec_())
+    app = QtWidgets.QApplication(sys.argv)
+    main = MainWindow()
+    main.setWindowTitle("8 Queens")
+    main.show()
+    sys.exit(app.exec_())
