@@ -10,6 +10,7 @@ from chessboard.chessboard_state_node import ChessboardStateNode
     Parameter:
         initial_chessboard_state: a ChessboardStateNode instance encapsulating the current chessboard state.
 """
+n = 8
 
 
 class HillClimbingSolver(AbstractSolver):
@@ -26,7 +27,7 @@ class HillClimbingSolver(AbstractSolver):
         current_state = initial_chessboard_state
         rr_count = 0
         start_time = time.time()
-        while current_state is not None:
+        while True:
             print("Current state #attacks =", current_state.cost())
             current_state.chessboard_state.print_chessboard()
             self.prev_expanded_states.append(current_state.chessboard_state)
@@ -51,7 +52,7 @@ class HillClimbingSolver(AbstractSolver):
                 else:
                     current_state = self.random_restart()
                     rr_count += 1
-                    print("--- Local optima #", rr_count, "---")
+                    print("--- Local Optima #", rr_count, "---")
             self.expanded_count += 1
         end_time = time.time()
         self.execution_time = end_time - start_time
@@ -66,10 +67,10 @@ class HillClimbingSolver(AbstractSolver):
         return self.expanded_count
 
     def random_restart(self):
-        configuration = [['#' for _ in range(8)] for _ in range(8)]
+        configuration = [['#' for _ in range(n)] for _ in range(n)]
         positions = []
-        for i in range(8):
-            x, y = randint(0, 7), randint(0, 7)
+        for i in range(n):
+            x, y = randint(0, n - 1), randint(0, n - 1)
             if positions.count([x, y]) != 0:
                 i -= 1
             else:
@@ -78,10 +79,10 @@ class HillClimbingSolver(AbstractSolver):
             configuration[i][j] = 'Q'
         board = ChessboardState(configuration)
         while any(board.__eq__(e) for e in self.prev_expanded_states):
-            configuration = [['#' for _ in range(8)] for _ in range(8)]
+            configuration = [['#' for _ in range(n)] for _ in range(n)]
             positions.clear()
-            for i in range(8):
-                x, y = randint(0, 7), randint(0, 7)
+            for i in range(n):
+                x, y = randint(0, n - 1), randint(0, n - 1)
                 if positions.count([x, y]) != 0:
                     i -= 1
                 else:
