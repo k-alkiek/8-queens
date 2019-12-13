@@ -1,24 +1,30 @@
 from PyQt5 import QtWidgets
+
+from algorithms.hill_climbing_solver import HillClimbingSolver
+from chessboard.chessboard_state_node import ChessboardStateNode
 from ui.main_window import MainWindow
 import sys
 
 from file_io import read_config, write_config
 from chessboard.chessboard_state import ChessboardState
 
-
-
-
 if __name__ == '__main__':
-    pass
+    # pass
     initial_config = read_config('input.txt')
 
     state = ChessboardState(initial_config)
     state.print_chessboard()
 
+    hill = HillClimbingSolver()
+    hill.solve(ChessboardStateNode(state))
+    print("Number steps to the final solution =", hill.get_cost())
+    hill.get_final_solution().print_chessboard()
+    print("Number of attacks in the final solution =", hill.conflictions_count)
+    print("Expanded node count =", hill.get_expanded_count())
+    print("Execution time in milliseconds =", hill.get_running_time())
 
-    app = QtWidgets.QApplication(sys.argv)
-    main = MainWindow()
-    main.setWindowTitle("8 Queens")
-    main.show()
-    sys.exit(app.exec_())
-
+    # app = QtWidgets.QApplication(sys.argv)
+    # main = MainWindow()
+    # main.setWindowTitle("8 Queens")
+    # main.show()
+    # sys.exit(app.exec_())
