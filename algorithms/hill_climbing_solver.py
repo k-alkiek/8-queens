@@ -22,9 +22,10 @@ class HillClimbingSolver(AbstractSolver):
     RANDOM_RESTART_LIMIT = 10
     prev_expanded_states = []
 
-    def solve(self, initial_chessboard_state):
+    def solve(self, initial_chessboard_state, local_optima_solve='rr'):
         min_cost = initial_chessboard_state.cost()
         current_state = initial_chessboard_state
+        sideways = []
         rr_count = 0
         start_time = time.time()
         while True:
@@ -47,12 +48,22 @@ class HillClimbingSolver(AbstractSolver):
                     self.conflictions_count = current_state.cost()
                     self.optimal_sol = current_state.chessboard_state
                     self.steps_count += current_state.depth
-                if rr_count == self.RANDOM_RESTART_LIMIT:
-                    break
+                if local_optima_solve == 'sa' and len(sideways) > 0:
+                    current_state = sideways.pop()
+                    min_cost = current_state.cost()
+                    print("--- Local Optima --- Use Sideway move")
                 else:
-                    current_state = self.random_restart()
-                    rr_count += 1
-                    print("--- Local Optima #", rr_count, "---")
+                    if rr_count == self.RANDOM_RESTART_LIMIT:
+                        break
+                    else:
+                        current_state = self.random_restart()
+                        min_cost = current_state.cost()
+                        rr_count += 1
+                        print("--- Local Optima #", rr_count, "--- Use random restart")
+            else:
+                for state in current_state.parent.neighbors():
+                    if state.cost() == min_cost and not any(state.chessboard_state.__eq__(x) for x in self.prev_expanded_states):
+                        sideways.append(state)
             self.expanded_count += 1
         end_time = time.time()
         self.execution_time = end_time - start_time

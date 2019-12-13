@@ -17,20 +17,20 @@ if __name__ == '__main__':
     state = ChessboardState(initial_config)
     state.print_chessboard()
 
-    csp = CSPSolver()
-    csp.solve(state)
-    print("Number steps to the final solution =", csp.get_cost())
-    csp.final_sol.print_chessboard()
-    print("Expanded node count =", csp.get_expanded_count())
-    print("Execution time in milliseconds =", csp.get_running_time())
+    # csp = CSPSolver()
+    # csp.solve(state)
+    # print("Number steps to the final solution =", csp.get_cost())
+    # csp.final_sol.print_chessboard()
+    # print("Expanded node count =", csp.get_expanded_count())
+    # print("Execution time in milliseconds =", csp.get_running_time())
 
-    # hill = HillClimbingSolver()
-    # hill.solve(ChessboardStateNode(state))
-    # print("Number steps to the final solution =", hill.get_cost())
-    # hill.get_final_solution().print_chessboard()
-    # print("Number of attacks in the final solution =", hill.conflictions_count)
-    # print("Expanded node count =", hill.get_expanded_count())
-    # print("Execution time in milliseconds =", hill.get_running_time())
+    hill = HillClimbingSolver()
+    hill.solve(ChessboardStateNode(state), 'sa')
+    print("Number steps to the final solution =", hill.get_cost())
+    hill.get_final_solution().print_chessboard()
+    print("Number of attacks in the final solution =", hill.conflictions_count)
+    print("Expanded node count =", hill.get_expanded_count())
+    print("Execution time in milliseconds =", hill.get_running_time())
     #
     # print(len(state.neighbors()));
 
