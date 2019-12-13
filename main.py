@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets
 
+from algorithms.beam_search_solver import BeamSearchSolver
 from algorithms.ga_solver import GASolver
 from algorithms.csp_solver import CSPSolver
 from algorithms.hill_climbing_solver import HillClimbingSolver
@@ -15,7 +16,12 @@ if __name__ == '__main__':
     initial_config = read_config('input2.txt')
 
     state = ChessboardState(initial_config)
-    state.print_chessboard()
+    # state.print_chessboard()
+    beam_search = BeamSearchSolver()
+    final_state = beam_search.solve()
+    final_state.print_chessboard()
+    print(final_state.get_attacking_count())
+    print(beam_search.get_running_time(), beam_search.get_expanded_count(), beam_search.get_cost())
 
     csp = CSPSolver()
     csp.solve(state)
