@@ -1,3 +1,6 @@
+from random import randrange
+
+
 class ChessboardState:
     """
     Encapsulates the logic of the game
@@ -16,7 +19,7 @@ class ChessboardState:
             self.queen_positions = frozenset()
             self.init_queen_positions(chessboard)
         elif queen_positions is not None:
-            self.queen_positions = queen_positions
+            self.queen_positions = frozenset(queen_positions)
 
     def init_queen_positions(self, chessboard):
         config = []
@@ -86,3 +89,15 @@ class ChessboardState:
     def __eq__(self, other):
         assert isinstance(other, ChessboardState)
         return self.queen_positions == other.queen_positions
+
+    """
+        Returns a state with one queen per column
+    """
+    @classmethod
+    def random_state_one_per_col(cls, seed=None):
+        queen_positions = []
+        for i in range(cls.n):
+            queen_positions.append((randrange(0, cls.n), i))
+
+        state = ChessboardState(queen_positions=queen_positions)
+        return state

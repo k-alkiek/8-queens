@@ -1,4 +1,6 @@
 from PyQt5 import QtWidgets
+
+from algorithms.ga_solver import GASolver
 from ui.main_window import MainWindow
 import sys
 
@@ -13,8 +15,9 @@ if __name__ == '__main__':
     state.print_chessboard()
     print(len(state.neighbors()));
 
-    app = QtWidgets.QApplication(sys.argv)
-    main = MainWindow()
-    main.setWindowTitle("8 Queens")
-    main.show()
-    sys.exit(app.exec_())
+    # GUI
+    # app = QtWidgets.QApplication(sys.argv)
+    # main = MainWindow()
+    # main.setWindowTitle("8 Queens")
+    # main.show()
+    # sys.exit(app.exec_())
