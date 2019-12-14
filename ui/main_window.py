@@ -27,11 +27,15 @@ class MainWindow(QMainWindow):
         self.ui.centralwidget.setStyleSheet("background-color: #CBCBCB")
         self.ui.menubar.setStyleSheet("background-color: #A8A8A8")
         self.create_chessboard()
+        self.reset_params_form()
+
 
         # Connect up the buttons.
         self.ui.resetButton.clicked.connect(self.reset_chessboard)
         self.ui.actionLoad.triggered.connect(self.load_file)
         self.ui.actionSave.triggered.connect(self.save_file)
+        self.ui.algorithmComboBox.currentIndexChanged.connect(self.reset_params_form)
+        self.ui.paramComboBox.currentIndexChanged.connect(self.reset_params_comboBox)
 
         # Populate chessboard grid
 
@@ -86,6 +90,60 @@ class MainWindow(QMainWindow):
                     btn.setIcon(QIcon())
                 elif self.chessboard[i][j] == 'Q':
                     btn.setIcon(QIcon('./ui/queen-tile.png'))
+
+
+    def reset_params_form(self):
+        algorithm = self.ui.algorithmComboBox.currentText()
+
+        if algorithm == "Hill Climbing":
+            self.ui.paramLabel_1.setHidden(False)
+            self.ui.paramLabel_1.setText("Restarts")
+            self.ui.paramLabel_2.setHidden(True)
+            self.ui.paramLineEdit_1.setHidden(False)
+            self.ui.paramLineEdit_1.setText("10")
+            self.ui.paramLineEdit_2.setHidden(True)
+            self.ui.paramSelectLabel.setHidden(False)
+            self.ui.paramComboBox.setHidden(False)
+            self.ui.paramComboBox.setCurrentIndex(0)
+
+        elif algorithm == "Beam Search":
+            self.ui.paramLabel_1.setHidden(False)
+            self.ui.paramLabel_1.setText("Beam Width K")
+            self.ui.paramLabel_2.setHidden(True)
+            self.ui.paramLineEdit_1.setHidden(False)
+            self.ui.paramLineEdit_1.setText("10")
+            self.ui.paramLineEdit_2.setHidden(True)
+            self.ui.paramSelectLabel.setHidden(True)
+            self.ui.paramComboBox.setHidden(True)
+
+        elif algorithm == "Genetic Algorithm":
+            self.ui.paramLabel_1.setHidden(False)
+            self.ui.paramLabel_1.setText("Population Count")
+            self.ui.paramLabel_2.setHidden(False)
+            self.ui.paramLabel_1.setText("Generations")
+            self.ui.paramLineEdit_1.setHidden(False)
+            self.ui.paramLineEdit_1.setText("16")
+            self.ui.paramLineEdit_2.setHidden(False)
+            self.ui.paramLineEdit_1.setText("2500")
+            self.ui.paramSelectLabel.setHidden(True)
+            self.ui.paramComboBox.setHidden(True)
+
+        elif algorithm == "CSP":
+            self.ui.paramLabel_1.setHidden(True)
+            self.ui.paramLabel_2.setHidden(True)
+            self.ui.paramLineEdit_1.setHidden(True)
+            self.ui.paramLineEdit_2.setHidden(True)
+            self.ui.paramSelectLabel.setHidden(True)
+            self.ui.paramComboBox.setHidden(True)
+
+    def reset_params_comboBox(self):
+        i = self.ui.paramComboBox.currentIndex()
+        if i == 0:  # Random Restart
+            self.ui.paramLabel_1.setHidden(False)
+            self.ui.paramLineEdit_1.setHidden(False)
+        else:
+            self.ui.paramLabel_1.setHidden(True)
+            self.ui.paramLineEdit_1.setHidden(True)
 
     def load_file(self):
         file, _ = QFileDialog.getOpenFileName(QFileDialog(), 'Open File')

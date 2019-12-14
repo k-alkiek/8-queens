@@ -17,11 +17,11 @@ if __name__ == '__main__':
 
     state = ChessboardState(initial_config)
     # state.print_chessboard()
-    beam_search = BeamSearchSolver()
-    final_state = beam_search.solve()
+    ga_solver = GASolver(n_population=8)
+    final_state = ga_solver.solve()
     final_state.print_chessboard()
     print(final_state.get_attacking_count())
-    print(beam_search.get_running_time(), beam_search.get_expanded_count(), beam_search.get_cost())
+    print(ga_solver.get_running_time(), ga_solver.get_expanded_count(), ga_solver.get_cost())
 
     # csp = CSPSolver()
     # csp.solve(state)
@@ -41,8 +41,8 @@ if __name__ == '__main__':
     # print(len(state.neighbors()));
 
     # GUI
-    # app = QtWidgets.QApplication(sys.argv)
-    # main = MainWindow()
-    # main.setWindowTitle("8 Queens")
-    # main.show()
-    # sys.exit(app.exec_())
+    app = QtWidgets.QApplication(sys.argv)
+    main = MainWindow()
+    main.setWindowTitle("8 Queens")
+    main.show()
+    sys.exit(app.exec_())
