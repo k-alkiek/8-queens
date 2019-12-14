@@ -126,6 +126,10 @@ class CSPSolver(AbstractSolver):
         return positions
 
     def random_move(self, positions):
-        x, y, pos = randint(0, 7), randint(0, 7), randint(0, 7)
-        positions[pos] = (x, y)
+        x, y = randint(0, 7), randint(0, 7)
+        for i in range(n):
+            x1, y1 = positions[i]
+            if y1 == y:
+                positions[i] = (x, y)
+                break
         return positions
