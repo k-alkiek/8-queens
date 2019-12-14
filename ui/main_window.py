@@ -6,7 +6,12 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QSizePolicy, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from algorithms.beam_search_solver import BeamSearchSolver
+from algorithms.csp_solver import CSPSolver
+from algorithms.ga_solver import GASolver
+from algorithms.hill_climbing_solver import HillClimbingSolver
 from chessboard.chessboard_state import ChessboardState
+from chessboard.chessboard_state_node import ChessboardStateNode
 from file_io import read_config, write_config
 from ui.ui_main_window import Ui_MainWindow
 
@@ -34,8 +39,9 @@ class MainWindow(QMainWindow):
         self.ui.resetButton.clicked.connect(self.reset_chessboard)
         self.ui.actionLoad.triggered.connect(self.load_file)
         self.ui.actionSave.triggered.connect(self.save_file)
+        self.ui.solveButton.clicked.connect(self.solve)
         self.ui.algorithmComboBox.currentIndexChanged.connect(self.reset_params_form)
-        self.ui.paramComboBox.currentIndexChanged.connect(self.reset_params_comboBox)
+        # self.ui.paramComboBox.currentIndexChanged.connect(self.reset_params_comboBox)
 
         # Populate chessboard grid
 
@@ -111,7 +117,7 @@ class MainWindow(QMainWindow):
             self.ui.paramLabel_1.setText("Beam Width K")
             self.ui.paramLabel_2.setHidden(True)
             self.ui.paramLineEdit_1.setHidden(False)
-            self.ui.paramLineEdit_1.setText("10")
+            self.ui.paramLineEdit_1.setText("8")
             self.ui.paramLineEdit_2.setHidden(True)
             self.ui.paramSelectLabel.setHidden(True)
             self.ui.paramComboBox.setHidden(True)
@@ -120,11 +126,11 @@ class MainWindow(QMainWindow):
             self.ui.paramLabel_1.setHidden(False)
             self.ui.paramLabel_1.setText("Population Count")
             self.ui.paramLabel_2.setHidden(False)
-            self.ui.paramLabel_1.setText("Generations")
+            self.ui.paramLabel_2.setText("Generations")
             self.ui.paramLineEdit_1.setHidden(False)
             self.ui.paramLineEdit_1.setText("16")
             self.ui.paramLineEdit_2.setHidden(False)
-            self.ui.paramLineEdit_1.setText("2500")
+            self.ui.paramLineEdit_2.setText("2500")
             self.ui.paramSelectLabel.setHidden(True)
             self.ui.paramComboBox.setHidden(True)
 
@@ -155,3 +161,36 @@ class MainWindow(QMainWindow):
         file, _ = QFileDialog.getSaveFileName(QFileDialog(), 'Save')
         if file:
             write_config(file, self.chessboard)
+
+    def solve(self):
+        algorithm = self.ui.algorithmComboBox.currentText()
+        solver = None
+        initial_state = ChessboardState(chessboard=self.chessboard)
+        final_state = None
+
+        if algorithm == "Hill Climbing":
+            i = self.ui.paramComboBox.currentIndex()
+            restarts_limit = int(self.ui.paramLineEdit_1.text())
+            solver = HillClimbingSolver(['rr', 'sa'][i], restarts_limit)
+            final_state = solver.solve(ChessboardStateNode(initial_state))
+        elif algorithm == "Beam Search":
+            k = int(self.ui.paramLineEdit_1.text())
+            solver = BeamSearchSolver(k)
+            final_state = solver.solve()
+        elif algorithm == "Genetic Algorithm":
+            pop = int(self.ui.paramLineEdit_1.text())
+            gen = int(self.ui.paramLineEdit_2.text())
+            solver = GASolver(n_population=pop, n_generations=gen)
+            final_state = solver.solve()
+        elif algorithm == "CSP":
+            solver = CSPSolver()
+            final_state = solver.solve(initial_state)
+
+        self.chessboard = [['#' for _ in range(MainWindow.n)] for _ in range(MainWindow.n)]
+        for i, j in final_state.queen_positions:
+            self.chessboard[i][j] = 'Q'
+        self.refresh_chessboard()
+
+        self.ui.runningTimeLineEdit.setText(str(solver.get_running_time()))
+        self.ui.costLineEdit.setText(str(solver.get_cost()))
+        self.ui.expandedNodesLineEdit.setText(str(solver.get_expanded_count()))
