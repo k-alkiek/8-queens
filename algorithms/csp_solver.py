@@ -20,6 +20,7 @@ class CSPSolver(AbstractSolver):
 
     def solve(self, initial_chessboard_state):
         # Structure: each column should contain only one queen
+        prev_expanded = []
         start_time = time.time()
         current_state, positions = self.get_chessboard_and_positions(initial_chessboard_state)
         while True:
@@ -30,19 +31,28 @@ class CSPSolver(AbstractSolver):
                 self.final_sol = current_state
                 break
             positions = self.heuristic_move(positions)
-            self.expanded_count += 1
             current_state = ChessboardState(queen_positions=positions)
+            # while any(current_state.__eq__(x) for x in prev_expanded):
+            #     positions = self.heuristic_move(positions)
+            #     current_state = ChessboardState(queen_positions=positions)
+            self.expanded_count += 1
+            prev_expanded.append(current_state)
             if last_cost == current_state.get_attacking_count():        # local optima
                 print("--- Local Optima ---")
                 positions = self.random_move(positions)
-                self.expanded_count += 1
                 current_state = ChessboardState(queen_positions=positions)
+                while any(current_state.__eq__(x) for x in prev_expanded):
+                    positions = self.random_move(positions)
+                    current_state = ChessboardState(queen_positions=positions)
+                self.expanded_count += 1
+                prev_expanded.append(current_state)
                 last_cost = current_state.get_attacking_count()
             else:
                 last_cost = current_state.get_attacking_count()
             self.steps_count += 1
         end_time = time.time()
         self.execution_time = end_time - start_time
+        return self.final_sol
 
     def get_running_time(self):
         return int(round(self.execution_time * 1000))

@@ -67,6 +67,7 @@ class HillClimbingSolver(AbstractSolver):
             self.expanded_count += 1
         end_time = time.time()
         self.execution_time = end_time - start_time
+        return self.optimal_sol
 
     def get_running_time(self):
         return int(round(self.execution_time * 1000))
