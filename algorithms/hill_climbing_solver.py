@@ -85,24 +85,24 @@ class HillClimbingSolver(AbstractSolver):
     def random_restart(self):
         configuration = [['#' for _ in range(n)] for _ in range(n)]
         positions = []
-        for i in range(n):
+        i = 0
+        while i < n:
             x, y = randint(0, n - 1), randint(0, n - 1)
-            if positions.count([x, y]) != 0:
-                i -= 1
-            else:
-                positions.append([x, y])
+            if (x, y) not in positions:
+                positions.append((x, y))
+                i += 1
         for i, j in positions:
             configuration[i][j] = 'Q'
         board = ChessboardState(configuration)
         while any(board.__eq__(e) for e in self.prev_expanded_states):
             configuration = [['#' for _ in range(n)] for _ in range(n)]
             positions.clear()
-            for i in range(n):
+            i = 0
+            while i < n:
                 x, y = randint(0, n - 1), randint(0, n - 1)
-                if positions.count([x, y]) != 0:
-                    i -= 1
-                else:
-                    positions.append([x, y])
+                if (x, y) not in positions:
+                    positions.append((x, y))
+                    i += 1
             for i, j in positions:
                 configuration[i][j] = 'Q'
             board = ChessboardState(configuration)
