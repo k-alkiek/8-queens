@@ -31,6 +31,11 @@ class GASolver(AbstractSolver):
         self.expanded_nodes += len(population)
 
         for i in range(self.n_generations):
+            best_chromosome = max(population, key=lambda c: c.fitness())
+            if best_chromosome.fitness() == 1:
+                self.end_time = time.time()
+                return best_chromosome.state
+
             population = self.__crossover_population(population)
             self.__mutate_population(population)
             self.expanded_nodes += len(population)

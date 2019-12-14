@@ -17,11 +17,11 @@ if __name__ == '__main__':
 
     state = ChessboardState(initial_config)
     # state.print_chessboard()
-    beam_search = BeamSearchSolver()
-    final_state = beam_search.solve()
+    ga_solver = GASolver(n_population=8)
+    final_state = ga_solver.solve()
     final_state.print_chessboard()
     print(final_state.get_attacking_count())
-    print(beam_search.get_running_time(), beam_search.get_expanded_count(), beam_search.get_cost())
+    print(ga_solver.get_running_time(), ga_solver.get_expanded_count(), ga_solver.get_cost())
 
     # csp = CSPSolver()
     # csp.solve(state)
@@ -30,13 +30,13 @@ if __name__ == '__main__':
     # print("Expanded node count =", csp.get_expanded_count())
     # print("Execution time in milliseconds =", csp.get_running_time())
 
-    hill = HillClimbingSolver()
-    hill.solve(ChessboardStateNode(state), 'sa')
-    print("Number steps to the final solution =", hill.get_cost())
-    hill.get_final_solution().print_chessboard()
-    print("Number of attacks in the final solution =", hill.conflictions_count)
-    print("Expanded node count =", hill.get_expanded_count())
-    print("Execution time in milliseconds =", hill.get_running_time())
+    # hill = HillClimbingSolver()
+    # hill.solve(ChessboardStateNode(state), 'sa')
+    # print("Number steps to the final solution =", hill.get_cost())
+    # hill.get_final_solution().print_chessboard()
+    # print("Number of attacks in the final solution =", hill.conflictions_count)
+    # print("Expanded node count =", hill.get_expanded_count())
+    # print("Execution time in milliseconds =", hill.get_running_time())
     #
     # print(len(state.neighbors()));
 
