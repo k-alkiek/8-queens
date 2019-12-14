@@ -41,8 +41,8 @@ if __name__ == '__main__':
     # print(len(state.neighbors()));
 
     # GUI
-    # app = QtWidgets.QApplication(sys.argv)
-    # main = MainWindow()
-    # main.setWindowTitle("8 Queens")
-    # main.show()
-    # sys.exit(app.exec_())
+    app = QtWidgets.QApplication(sys.argv)
+    main = MainWindow()
+    main.setWindowTitle("8 Queens")
+    main.show()
+    sys.exit(app.exec_())
